@@ -125,3 +125,16 @@ def tower():
     else:
         print("There is nothing here.")
 # main game loop
+meadow()
+
+while game_over == False:
+    while True:
+        commands = input("What would you like to do? ").lower().strip().split()
+
+        if len(commands) > 0:
+            break
+
+    if commands[0] == "quit":
+        print("Bye bye.")
+        game_over = True
+        
