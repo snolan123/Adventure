@@ -37,6 +37,45 @@ def item_checker():
         print("There is a sword here.")
 
 # command handlers
+def exit_handler(location):
+    global player_location
+
+    if player_location == "house" and location == "house":
+        print("You exited the house.")
+        house_entrance()
+        item_checker()
+    elif player_location == "cave" and location == "cave":
+        print("You exited the cave.")
+        cave_entrance()
+        item_checker()
+    elif player_location == "tower" and location == "tower":
+        print("You exited the tower.")
+        tower_entrance()
+        item_checker()
+    else:
+        print("You are not in a", location)
+
+def use_handler(object):
+    global player_location
+    global house_door_unlocked
+    global key_location
+    global potion_location
+    global MAX_PLAYER_HITPOINTS
+    global player_hitpoints
+
+    if player_location == "house_entrance" and key_location == "player":
+        print("You have unlocked the door.")
+        house_door_unlocked = True
+        key_location = "nothing"
+    elif potion_location == "player":
+        print("You have used the potion.")
+        player_hitpoints += 50
+        if player_hitpoints > MAX_PLAYER_HITPOINTS:
+            player_hitpoints = MAX_PLAYER_HITPOINTS
+        potion_location = "nothing"
+    else:
+        print("You do not have a", object)
+
 def enter_handler(location):
     global player_location
     global house_door_unlocked
@@ -307,4 +346,8 @@ while game_over == False:
         drop_handler(commands[1])
     elif commands[0] == "enter":
         enter_handler(commands[1])
+    elif commands[0] == "use":
+        use_handler(commands[1])
+    elif commands[0] == "exit":
+        exit_handler(commands[1])
         
