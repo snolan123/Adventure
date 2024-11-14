@@ -114,6 +114,21 @@ def move_handler(direction):
             print("You cannot move in that direction.")
 
     item_checker()
+
+def examine_handler(object):
+    global player_location
+    global key_location
+    global shield_location
+
+    if player_location == "river_2" and object == "rocks" and key_location == "rocks":
+        print("There is a key under the rocks.")
+        key_location = "river_2"
+
+    elif player_location == "forest" and object == "skeleton" and shield_location == "skeleton":
+        print("There is a shield on the skeleton.")
+        shield_location = "forest"
+    else:
+        print("There is nothing here.")
 # location functions
 def river_1():
     global player_location
@@ -216,4 +231,6 @@ while game_over == False:
         game_over = True
     elif commands[0] == "move":
         move_handler(commands[1])
+    elif commands[0] == "examine":
+        examine_handler(commands[1])
         
