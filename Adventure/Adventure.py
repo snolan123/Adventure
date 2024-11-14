@@ -37,6 +37,43 @@ def item_checker():
         print("There is a sword here.")
 
 # command handlers
+def attack_handler(object):
+    global player_location
+    global player_hitpoints
+    global player_attack_rating
+    global player_defence_rating
+    global ogre_hitpoints
+    global ogre_attack_rating
+    global ogre_defence_rating
+    global game_over
+
+    if player_location == "cave" and object == "ogre":
+        print("You attack the ogre.")
+        damage = random.randint(-ogre_defence_rating, player_attack_rating)
+        if damage > 0:
+            print("You dealt", damage, "damage.")
+            ogre_hitpoints -= damage
+        else:
+            print("You missed.")
+
+        damage = random.randint(-player_defence_rating, ogre_attack_rating)
+        if damage > 0:
+            print("The ogre hit you and dealt", damage, "damage.")
+            player_hitpoints -= damage
+        else:
+            print("The ogre missed.")
+
+        if player_hitpoints <= 0:
+            print("You died.")
+            game_over = True
+        elif ogre_hitpoints <= 0:
+            print("You killed the ogre.")
+            print("You approach the ancient treasure chest...")
+            print("With bated breath, you slowly life the lid...")
+            print("As the lid creaks open, a glimmer of light spills out from within..")
+            print("Behold, inside the chest, a sight to behold - it's filled with gold and jewels!")
+            game_over = True
+
 def exit_handler(location):
     global player_location
 
@@ -350,4 +387,6 @@ while game_over == False:
         use_handler(commands[1])
     elif commands[0] == "exit":
         exit_handler(commands[1])
+    elif commands[0] == "attack":
+        attack_handler(commands[1])
         
