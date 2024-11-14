@@ -36,7 +36,84 @@ def item_checker():
         print("There is a sword here.")
 
 # command handlers
+def move_handler(direction):
+    global player_location
 
+    if player_location == "river_1":
+        if direction == "east":
+            cave_entrance()
+        elif direction == "south":
+            river_2()
+        else:
+            print("You cannot move in that directon.")
+    elif player_location == "cave_entrance":
+        if direction == "west":
+            river_1()
+        elif direction == "east":
+            field()
+        elif direction == "south":
+            meadow()
+        else:
+            print("You cannot move in that direction.")
+    elif player_location == "field":
+        if direction == "west":
+            cave_entrance()
+        elif direction == "south":
+            house_entrance()
+        else:
+            print("You cannot move in that direction.")
+    elif player_location == "river_2":
+        if direction == "north":
+            river_1()
+        elif direction == "east":
+            meadow()
+        elif direction == "south":
+            river_3()
+        else:
+            print("You cannot move in that direction.")
+    elif player_location == "meadow":
+        if direction == "north":
+            cave_entrance()
+        elif direction == "east":
+            house_entrance()
+        elif direction == "south":
+            forest()
+        elif direction == "west":
+            river_2()
+    elif player_location == "house_entrance":
+        if direction == "north":
+            field()
+        elif direction == "south":
+            tower_entrance()
+        elif direction == "west":
+            meadow()
+        else:
+            print("You cannot move in that direction.")
+    elif player_location == "river_3":
+        if direction == "north":
+            river_2()
+        elif direction == "east":
+            forest()
+        else:
+            print("You cannot move in that direction.")
+    elif player_location == "forest":
+        if direction == "north":
+            meadow()
+        elif direction == "west":
+            river_3()
+        elif direction == "east":
+            tower_entrance()
+        else:
+            print("You cannot move in that direction.")
+    elif player_location == "tower_entrance":
+        if direction == "north":
+            house_entrance()
+        elif direction == "west":
+            forest()
+        else:
+            print("You cannot move in that direction.")
+
+    item_checker()
 # location functions
 def river_1():
     global player_location
@@ -137,4 +214,6 @@ while game_over == False:
     if commands[0] == "quit":
         print("Bye bye.")
         game_over = True
+    elif commands[0] == "move":
+        move_handler(commands[1])
         
