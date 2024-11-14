@@ -1,4 +1,5 @@
 # imports
+from asyncio import shield
 import random
 # game variables and constants
 game_over = False
@@ -36,6 +37,32 @@ def item_checker():
         print("There is a sword here.")
 
 # command handlers
+def pickup_handler(object):
+    global player_location
+    global key_location
+    global shield_location
+    global sword_location
+    global potion_location
+    global player_attack_rating
+    global player_defence_rating
+
+    if player_location == key_location and object == "key":
+        print("You have picked up the key.")
+        key_location = "player"
+    elif player_location == potion_location and object == "potion":
+        print("You have picked up the potion.")
+        potion_location = "player"
+    elif player_location == shield_location and object == "shield":
+        print("You have picked up the shield.")
+        shield_location = "player"
+        player_defence_rating += 30
+    elif player_location == sword_location and object == "sword":
+        print("You have picked up the sword.")
+        sword_location = "player"
+        player_attack_rating += 30
+    else:
+        print("There is no", object, "here")
+
 def move_handler(direction):
     global player_location
 
@@ -233,4 +260,6 @@ while game_over == False:
         move_handler(commands[1])
     elif commands[0] == "examine":
         examine_handler(commands[1])
+    elif commands[0] == "pickup":
+        pickup_handler(commands[1])
         
