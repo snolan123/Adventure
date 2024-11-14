@@ -37,6 +37,22 @@ def item_checker():
         print("There is a sword here.")
 
 # command handlers
+def enter_handler(location):
+    global player_location
+    global house_door_unlocked
+
+    if player_location == "house_entrance" and location == "house" and house_door_unlocked == True:
+        house()
+        item_checker()
+    elif player_location == "cave_entrance" and location == "cave":
+        cave()
+        item_checker()
+    elif player_location == "tower_entrance" and location == "tower":
+        tower()
+        item_checker()
+    else:
+        print("You can't go there.")
+
 def drop_handler(object):
     global player_location
     global key_location
@@ -289,4 +305,6 @@ while game_over == False:
         pickup_handler(commands[1])
     elif commands[0] == "drop":
         drop_handler(commands[1])
+    elif commands[0] == "enter":
+        enter_handler(commands[1])
         
