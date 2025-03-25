@@ -32,6 +32,15 @@ class Player:
         
         print(f"You do not have a {item_name}")
 
+    def use(self, item_name):
+        for item in self.items:
+            if item.name == item_name:
+                item.use(self)
+                self.location.useItem(item, self)
+                return
+        
+        print(f"You do not have a {item_name}")
+
 class Item:
     def __init__(self, name):
         self.name = name
@@ -44,6 +53,7 @@ class Item:
 
     def use(self, player):
         pass
+
 
 class Monster:
     def __init__(self, name, description, hitpoints, attack_rating, defence_rating):
@@ -70,16 +80,13 @@ class Location:
             print(f"There is a {self.monster.name} here")
             print(self.monster.description)
 
-    def moveTo(self):
-        pass
-
-    def useItem(self, item):
+    def useItem(self, item, player):
         pass
 
     def canMove(self):
         return True
 
-    def exmaine(self, item):
+    def examine(self, item):
         pass
 
 class RiverWithRocks(Location):
@@ -91,7 +98,7 @@ class RiverWithRocks(Location):
         Location.describe(self)
         print("There are rocks here")
 
-    def exmaine(self, item):
+    def examine(self, item):
         if item == "rocks":
             if self.examined_rocks == False:
                 print("There is a key here")
@@ -101,7 +108,26 @@ class RiverWithRocks(Location):
                 print("There is nothing here")
         else:
             print(f"There is no {item} here")
-            
+     
+class House(Location):
+    def __init__(self, name, description):
+        Location.__init__(self, name, description)
+        self.unlocked = False
+
+    def canMove(self):
+        return self.unlocked == True
+
+class HouseEntrance(Location):
+    def __init__(self, name, description):
+        Location.__init__(self, name, description)
+
+    def useItem(self, item, player):
+        if item.name == "key":
+            self.exits["inside"].unlocked = True
+            player.items.remove(item)
+            print("You unlocked the door.")
+        else:
+            print("Nothing happens.")
 
 river_1 = Location("river", "The crystal-clear river flows gently, its waters sparkling in the sunlight, with tall grasses swaying along the banks.")
 cave = Location("cave", "Inside the cave, the air is cool and damp, with jagged rocks lining the walls and a faint, eerie glow emanating from deep within the shadows.")
@@ -153,6 +179,6 @@ while True:
     elif commands[0] == "move":
         player.move(commands[1])
     elif commands[0] == "examine":
-        player.location.exmaine(commands[1])
+        player.location.examine(commands[1])
     elif commands[0] == "pickup":
         player.pickup(commands[1])
