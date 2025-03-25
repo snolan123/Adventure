@@ -1,10 +1,13 @@
+import random
+
 class Player:
-    def __init__(self, name, attack_rating, defence_rating):
+    def __init__(self, name, hitpoints, attack_rating, defence_rating):
         self.name = name
         self.items = []
         self.location = 0
         self.attack_rating = attack_rating
         self.defence_rating = defence_rating
+        self.hitpoints = hitpoints
 
     def move(self, direction):
         if direction in self.location.exits and self.location.exits[direction].canMove() == True:
@@ -45,6 +48,29 @@ class Player:
                 return
         
         print(f"You do not have a {item_name}")
+
+    def attack(self):
+        if self.location.monster != 0:
+            print(f"You attack the {self.location.monster.name}.")
+            damage = random.randint(-self.location.monster.defence_rating, self.attack_rating)
+            if damage > 0:
+                print("You dealt", damage, "damage.")
+                self.location.monster.hitpoints -= damage
+            else:
+                print("You missed.")
+
+            damage = random.randint(-self.defence_rating, self.location.monster.attack_rating)
+            if damage > 0:
+                print(f"The {self.location.monster.name} hit you and dealt", damage, "damage.")
+                self.hitpoints -= damage
+            else:
+                print(f"The {self.location.monster.name} missed.")
+
+            if self.location.monster.hitpoints <= 0:
+                print(f"You killed the {self.location.monster.name}.")
+                self.location.monster = 0
+        else:
+            print("There is no monster here")
 
 class Item:
     def __init__(self, name):
@@ -223,21 +249,36 @@ river_3 = Location("river", "The crystal-clear river flows gently, its waters sp
 forest = Forest("forest", "The dense forest is filled with towering trees, soft moss underfoot, and the rich scent of pine, with only the rustling of leaves breaking the silence.")
 tower = Tower("tower", "The wizard's tower is an ancient, towering structure filled with shelves of arcane tomes, glowing potions, and strange artifacts.")
 tower_entrance = Location("tower entrance", "The towering stone archway of the ancient tower stands before you, its oak door reinforced with iron and a sense of mystery in the air.")
-tower_entrance.building = tower
 
-river_1.exits = {"east": cave_entrance, "south": river_with_rocks}
-cave_entrance.exits = {"east": field, "south": meadow, "west": river_1, "inside": cave }
-cave.exits = {"outside": cave_entrance }
-field.exits = {"east": cave_entrance, "south": house_entrance }
-river_with_rocks.exits = {"north": river_1, "east": meadow, "south": river_3}
-meadow.exits = {"north": cave_entrance, "east": house_entrance, "south": forest, "west":river_with_rocks}
-house_entrance.exits = {"north": field, "south": tower_entrance, "west": meadow, "inside": house}
-house.exits = {"outside": house_entrance}
-river_3.exits = {"north": river_with_rocks, "east": forest}
-forest.exits = {"north": meadow, "east": tower_entrance, "west":river_3}
-tower_entrance.exits = {"west": forest, "north": house_entrance, "inside": tower}
-tower.exits = {"outside": tower_entrance}
-
+river_1.exits["east"] = cave_entrance
+river_1.exits["south"] = river_with_rocks
+cave_entrance.exits["east"] = field
+cave_entrance.exits["west"] = river_1
+cave_entrance.exits["inside"] = cave
+cave.exits["outside"] = cave_entrance
+field.exits["west"] = cave_entrance
+field.exits["south"] = house_entrance
+river_with_rocks.exits["north"] = river_1
+river_with_rocks.exits["east"] = meadow
+river_with_rocks.exits["south"] = river_3
+meadow.exits["north"] = cave_entrance
+meadow.exits["east"] = house_entrance
+meadow.exits["south"] = forest
+meadow.exits["west"] = river_with_rocks
+house_entrance.exits["north"] = field
+house_entrance.exits["south"] = tower_entrance
+house_entrance.exits["west"] = meadow
+house_entrance.exits["inside"] = house
+house.exits["outside"] = house_entrance
+river_3.exits["north"] = river_with_rocks
+river_3.exits["east"] = forest
+forest.exits["north"] = meadow
+forest.exits["east"] = tower_entrance
+forest.exits["west"] = river_3
+tower_entrance.exits["west"] = forest
+tower_entrance.exits["north"] = tower_entrance
+tower_entrance.exits["inside"] = tower
+tower.exits["outside"] = tower_entrance
 
 ogre = Monster("ogre", "The ogre stands towering before you, its hulking figure covered in rough, mossy skin, with wild, unkempt hair and glowing eyes that burn with a fierce, menacing glare.", 100, 10, 20)
 cave.monster = ogre
@@ -251,15 +292,16 @@ while name == "":
 
 print(f"Welcome brave {name}")
 
-player = Player(name, 1, 1)
+player = Player(name, 100, 1, 1)
 player.location = meadow
 player.location.describe()
 
-while True:
+game_over = False
+while game_over == False:
     commands = input("What do you want to do? ").strip().lower().split()
     if commands[0] == "quit":
         print("Thanks for playing!")
-        break
+        game_over = True
     elif commands[0] == "move":
         player.move(commands[1])
     elif commands[0] == "examine":
@@ -270,3 +312,15 @@ while True:
         player.drop(commands[1])
     elif commands[0] == "use":
         player.use(commands[1])
+    elif commands[0] == "attack":
+        player.attack()
+
+    if player.hitpoints <= 0:
+        print("You died.")
+        game_over = True
+    elif ogre.hitpoints <= 0:
+        print("You approach the ancient treasure chest...")
+        print("With bated breath, you slowly life the lid...")
+        print("As the lid creaks open, a glimmer of light spills out from within..")
+        print("Behold, inside the chest, a sight to behold - it's filled with gold and jewels!")
+        game_over = True

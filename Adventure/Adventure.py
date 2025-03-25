@@ -1,5 +1,4 @@
 # imports
-from asyncio import shield
 import random
 # game variables and constants
 game_over = False
