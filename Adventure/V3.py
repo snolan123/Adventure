@@ -7,6 +7,7 @@ player_location = ""
 player_hitpoints = MAX_PLAYER_HITPOINTS
 player_attack_rating = 1
 player_defence_rating = 1
+player_name = ""
 
 key_location = "rocks"
 shield_location = "skeleton"
@@ -236,7 +237,7 @@ def examine_handler(object):
 
     if player_location == "river" and object == "rocks" and key_location == "rocks":
         print("There is a key under the rocks.")
-        key_location = "river_2"
+        key_location = "river"
 
     elif player_location == "forest" and object == "skeleton" and shield_location == "skeleton":
         print("There is a shield on the skeleton.")
@@ -248,29 +249,31 @@ def examine_handler(object):
 def cave_entrance():
     global player_location
     player_location = "cave entrance"
-    print("You are at the cave entrance.")
+    print("The dark cave entrance looms ominously, with a cool, damp air and faint echoes beckoning you inside.")
 
 def cave():
     global player_location
     player_location = "cave"
-    print("You are in a cave.")
+    print("Inside the cave, the air is cool and damp, with jagged rocks lining the walls and a faint, eerie glow emanating from deep within the shadows.")
     print("Standing before you is a towering ogre, its eyes gleaming with malice.")
 
 def river():
     global player_location
-    player_location = "field"
-    print("You are in a field.")
+    player_location = "river"
+    print("The crystal-clear river flows gently, its waters sparkling in the sunlight, with tall grasses swaying along the banks.")
+    print("There are some rocks here.")
 
 def meadow():
     global player_location
     player_location = "meadow"
-    print("You are in a meadow.")
+    print("The meadow is a peaceful haven, with soft grass underfoot, vibrant \
+wildflowers blooming in every color, and the air filled with the sweet scent of nature and the hum of bees.")
 
 def house_entrance():
     global player_location
     global house_door_unlocked
     player_location = "house entrance"
-    print("You are at a house.")
+    print("A quaint cottage with weathered stone walls and a wooden door, surrounded by an overgrown garden and a stone path.")
 
     if house_door_unlocked == True:
         print("The door is open.")
@@ -280,24 +283,25 @@ def house_entrance():
 def house():
     global player_location
     player_location = "house"
-    print("You are in a house.")
+    print("The inside of the house is cozy, with a warm fire crackling in the hearth, \
+    wooden furniture scattered around, and the smell of fresh-baked bread lingering in the air.")
 
 def forest():
     global player_location
     player_location = "forest"
-    print("You are in a forest.")
+    print("The dense forest is filled with towering trees, soft moss underfoot, and the rich scent of pine, with only the rustling of leaves breaking the silence.")
     print("There is a skeleton of an old soldier here.")
 
 def tower_entrance():
     global player_location
-    player_location = "tower_entrance"
-    print("You are at a tower.")
+    player_location = "tower entrance"
+    print("The towering stone archway of the ancient tower stands before you, its oak door reinforced with iron and a sense of mystery in the air.")
 
 def tower():
     global player_location
     global potion_location
     player_location = "tower"
-    print("You are in a tower.")
+    print("The wizard's tower is an ancient, towering structure filled with shelves of arcane tomes, glowing potions, and strange artifacts.")
 
     if potion_location == "wizard":
         print("Standing in front of you is a wizard.")
@@ -316,11 +320,17 @@ def tower():
     else:
         print("There is nothing here.")
 # main game loop
+
+while player_name == "":
+    player_name = input("What is your name brave adventurer? ")
+
+print("Welcome brave", player_name)
+
 meadow()
 
 while game_over == False:
     while True:
-        commands = input("What would you like to do? ").lower().strip().split()
+        commands = input("What would you like to do brave " + player_name + "? ").lower().strip().split()
 
         if len(commands) > 0:
             break
