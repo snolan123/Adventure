@@ -9,26 +9,24 @@ player_attack_rating = 1
 player_defence_rating = 1
 player_name = ""
 
-key_location = "rocks"
+bread_location = "bench"
 shield_location = "skeleton"
 potion_location = "wizard"
-sword_location = "house"
+sword_location = "tree"
 
 ogre_hitpoints = 20
 ogre_attack_rating = 10
 ogre_defence_rating = 20
 
-house_door_unlocked = False
-
 def item_checker():
     global player_location
-    global key_location
+    global bread_location
     global shield_location
     global potion_location
     global sword_location
 
-    if player_location == key_location:
-        print("There is a key here.")
+    if player_location == bread_location:
+        print("There is a loaf of bread here.")
     if player_location == shield_location:
         print("There is a shield here.")
     if player_location == potion_location:
@@ -95,16 +93,17 @@ def exit_handler():
 def use_handler(object):
     global player_location
     global house_door_unlocked
-    global key_location
     global potion_location
     global MAX_PLAYER_HITPOINTS
     global player_hitpoints
 
-    if player_location == "house entrance" and key_location == "player":
+    if object == "bread" and bread_location == "player":
         print("You have unlocked the door.")
-        house_door_unlocked = True
-        key_location = "nothing"
-    elif potion_location == "player":
+        player_hitpoints += 5
+        if player_hitpoints > MAX_PLAYER_HITPOINTS:
+            player_hitpoints = MAX_PLAYER_HITPOINTS
+        bread_location = "nothing"
+    elif object == "potion" and potion_location == "player":
         print("You have used the potion.")
         player_hitpoints += 50
         if player_hitpoints > MAX_PLAYER_HITPOINTS:
@@ -117,7 +116,7 @@ def enter_handler():
     global player_location
     global house_door_unlocked
 
-    if player_location == "house entrance" and house_door_unlocked == True:
+    if player_location == "house entrance":
         house()
         item_checker()
     elif player_location == "cave entrance":
@@ -131,21 +130,21 @@ def enter_handler():
 
 def drop_handler(object):
     global player_location
-    global key_location
+    global bread_location
     global shield_location
     global sword_location
     global potion_location
     global player_attack_rating
     global player_defence_rating
 
-    if key_location == "player" and object == "key":
-        print("You have dropped the key.")
-        key_location = player_location
+    if bread_location == "player" and object == "bread":
+        print("You have dropped the bread.")
+        bread_location = player_location
     elif potion_location == "player" and object == "potion":
         print("You have dropped the potion.")
         potion_location = player_location
     elif shield_location == "player" and object == "shield":
-        print("YOu have dropped the shield.")
+        print("You have dropped the shield.")
         shield_location = player_location
         player_defence_rating -= 30
     elif sword_location == "player" and object == "sword":
@@ -156,16 +155,16 @@ def drop_handler(object):
 
 def pickup_handler(object):
     global player_location
-    global key_location
+    global bread_location
     global shield_location
     global sword_location
     global potion_location
     global player_attack_rating
     global player_defence_rating
 
-    if player_location == key_location and object == "key":
-        print("You have picked up the key.")
-        key_location = "player"
+    if (player_location == bread_location or bread_location == "bench") and object == "bread":
+        print("You have picked up the bread.")
+        bread_location = "player"
     elif player_location == potion_location and object == "potion":
         print("You have picked up the potion.")
         potion_location = "player"
@@ -173,7 +172,7 @@ def pickup_handler(object):
         print("You have picked up the shield.")
         shield_location = "player"
         player_defence_rating += 30
-    elif player_location == sword_location and object == "sword":
+    elif (player_location == sword_location or sword_location == "tree") and object == "sword":
         print("You have picked up the sword.")
         sword_location = "player"
         player_attack_rating += 30
@@ -232,14 +231,9 @@ def move_handler(direction):
 
 def examine_handler(object):
     global player_location
-    global key_location
     global shield_location
 
-    if player_location == "river" and object == "rocks" and key_location == "rocks":
-        print("There is a key under the rocks.")
-        key_location = "river"
-
-    elif player_location == "forest" and object == "skeleton" and shield_location == "skeleton":
+    if player_location == "forest" and object == "skeleton" and shield_location == "skeleton":
         print("There is a shield on the skeleton.")
         shield_location = "forest"
     else:
@@ -273,24 +267,25 @@ def house_entrance():
     global player_location
     global house_door_unlocked
     player_location = "house entrance"
-    print("A quaint cottage with weathered stone walls and a wooden door, surrounded by an overgrown garden and a stone path.")
-
-    if house_door_unlocked == True:
-        print("The door is open.")
-    else:
-        print("The door is locked.")
+    print("A quaint cottage with weathered stone walls and a wooden door slightly ajar, surrounded by an overgrown garden and a stone path.")
 
 def house():
     global player_location
+    global bread_location
     player_location = "house"
     print("The inside of the house is cozy, with a warm fire crackling in the hearth, \
     wooden furniture scattered around, and the smell of fresh-baked bread lingering in the air.")
+    if bread_location == "bench":
+        print("There is a warm loaf of bread sitting on the bench.")
 
 def forest():
     global player_location
+    global sword_location
     player_location = "forest"
     print("The dense forest is filled with towering trees, soft moss underfoot, and the rich scent of pine, with only the rustling of leaves breaking the silence.")
     print("There is a skeleton of an old soldier here.")
+    if sword_location == "tree":
+        print("A weathered sword leans quietly against the rough bark of an old tree.")
 
 def tower_entrance():
     global player_location
