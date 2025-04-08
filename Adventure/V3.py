@@ -183,30 +183,17 @@ def move_handler(direction):
     global player_location
 
     if player_location == "cave entrance":
-        if direction == "east":
-            river()
-        elif direction == "south":
-            meadow()
-        else:
-            print("You cannot move in that direction.")
-    elif player_location == "river":
-        if direction == "west":
-            cave_entrance()
-        elif direction == "south":
-            house_entrance()
+        if direction == "south":
+            forest()
         else:
             print("You cannot move in that direction.")
     elif player_location == "meadow":
-        if direction == "north":
-            cave_entrance()
-        elif direction == "east":
-            house_entrance()
-        elif direction == "south":
+        if direction == "west":
             forest()
+        else:
+            print("You cannot move in that direction.")
     elif player_location == "house entrance":
-        if direction == "north":
-            river()
-        elif direction == "south":
+        if direction == "south":
             tower_entrance()
         elif direction == "west":
             meadow()
@@ -217,6 +204,8 @@ def move_handler(direction):
             meadow()
         elif direction == "east":
             tower_entrance()
+        elif direction == "west":
+            meadow()
         else:
             print("You cannot move in that direction.")
     elif player_location == "tower entrance":
@@ -234,12 +223,13 @@ def examine_handler(object):
     global shield_location
 
     if player_location == "forest" and object == "skeleton" and shield_location == "skeleton":
-        print("There is a shield on the skeleton.")
+        print("You pull back the cape to reveal a sword and shield still in good condition.")
         shield_location = "forest"
+        sword_location = "forest"
     else:
         print("There is nothing here.")
-# location functions
 
+# location functions
 def cave_entrance():
     global player_location
     player_location = "cave entrance"
@@ -250,12 +240,6 @@ def cave():
     player_location = "cave"
     print("Inside the cave, the air is cool and damp, with jagged rocks lining the walls and a faint, eerie glow emanating from deep within the shadows.")
     print("Standing before you is a towering ogre, its eyes gleaming with malice.")
-
-def river():
-    global player_location
-    player_location = "river"
-    print("The crystal-clear river flows gently, its waters sparkling in the sunlight, with tall grasses swaying along the banks.")
-    print("There are some rocks here.")
 
 def meadow():
     global player_location
@@ -284,8 +268,6 @@ def forest():
     player_location = "forest"
     print("The dense forest is filled with towering trees, soft moss underfoot, and the rich scent of pine, with only the rustling of leaves breaking the silence.")
     print("There is a skeleton of an old soldier here.")
-    if sword_location == "tree":
-        print("A weathered sword leans quietly against the rough bark of an old tree.")
 
 def tower_entrance():
     global player_location
@@ -314,8 +296,8 @@ def tower():
             tower_entrance()
     else:
         print("There is nothing here.")
-# main game loop
 
+# main game loop
 while player_name == "":
     player_name = input("What is your name brave adventurer? ")
 
